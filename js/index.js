@@ -2,7 +2,7 @@ import { getValidPages } from './page-utils.js';
 
 document.addEventListener('DOMContentLoaded', function() {
     const goButton = document.getElementById('goButton');  // Get the goButton element
-    const homeLogo = document.getElementById('home-logo'); // Get the home logo element
+    const homeLogo = document.getElementById('Logo-bell'); // Get the home logo element
 
     let clickCount = 0;  // Initialize a click counter for the home logo
 

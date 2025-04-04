@@ -52,21 +52,32 @@ function parseTimestamp(timestamp) {
 // Accepts an argument `forceFresh` to force fetching fresh data (if true), else it defaults to local storage.
 export async function getValidPages(forceFresh = false) {
     try {
+        console.log(`getValidPages called with forceFresh: ${forceFresh}`);
+
         if (!forceFresh) {
             const cachedPages = getPagesFromLocalStorage();
             if (cachedPages) {
                 console.log("Pages fetched from local storage.");
                 return cachedPages; // Return cached data if available
+            } else {
+                console.log("No cached pages found. Fetching fresh data...");
             }
         }
 
         // Attempt to fetch fresh data from the server
+        console.log("Fetching pages data...");
         const pagesData = await fetchCSVData(config.pagesTable);
+        console.log("Fetching deleted data...");
         const deletedData = await fetchCSVData(config.deletedTable);
 
+        // Check if deleted data is empty
+        if (deletedData.length === 0) {
+            console.warn("No deleted pages found. Skipping deleted data filtering.");
+        }
+
         // If fetching fresh data fails or returns no data, return the cached pages
-        if (!pagesData || !deletedData || pagesData.length === 0 || deletedData.length === 0) {
-            console.error("Failed to fetch data, returning cached pages.");
+        if (!pagesData || pagesData.length === 0) {
+            console.error("Failed to fetch pages data, returning cached pages.");
             const cachedPages = getPagesFromLocalStorage();
             if (cachedPages) {
                 console.log("Returning cached valid pages.");
@@ -79,6 +90,7 @@ export async function getValidPages(forceFresh = false) {
         const recentPages = filterMostRecentPages(pagesData);
         const validPages = filterDeletedPages(recentPages, deletedData);
 
+        console.log(`Filtered valid pages: ${validPages.length} pages`);
         savePagesToLocalStorage(validPages); // Save valid pages to local storage
         console.log("Valid Pages Table with Original Fields:", validPages);
 
@@ -95,6 +107,7 @@ export async function getValidPages(forceFresh = false) {
         return []; // Return empty array if no cached pages exist
     }
 }
+
 
 // Save valid pages to localStorage
 function savePagesToLocalStorage(pages) {

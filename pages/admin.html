@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script type="module" src="/js/page-utils.js"></script>
+    <title>Admin</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Admin</h1>
+        <ul>
+            <li><a href="/pages/create-page.html" id="createPageLink">Crea nuova pagina</a></li>
+            <li><a href="/pages/manage-page.html" id="managePageLink">Gestisci pagine</a></li>
+            <li><a href="javascript:void(0);" id="downloadLink">Download pagine</a></li>
+            <li><a href="javascript:void(0);" id="updateButton">Aggiorna cache</a></li>
+            <div id="notification" class="notification-space"></div>
+    </div>
+    <footer id="sticky-footer">
+        <button id="back-button">Indietro</button>
+    </footer>
+    <script src="/main.js"></script>
+    <script type="module" src="/js/admin.js"></script>
+</body>
+</html>

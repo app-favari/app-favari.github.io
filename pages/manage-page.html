@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestore Pagine</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Gestore Pagine</h1>
+    </header>
+
+    <main>
+        <section class="dropdown-section">
+            <label for="pagesDropdown">Seleziona una pagina:</label>
+            <select id="pagesDropdown">
+                <!-- Dynamic options will be inserted here -->
+            </select>
+        </section>
+
+        <section class="form-section">
+            <label for="deletionFormId">Password per eliminazione:</label>
+            <input type="text" id="deletionFormId" placeholder="Inserisci l'ID del Google Form" />
+            
+            <div class="button-container">
+                <button id="deleteBtn" class="action-btn">Elimina Pagina</button>
+                <button id="editBtn" class="action-btn">Modifica Pagina</button>
+            </div>
+        </section>
+    </main>
+
+    <footer id="sticky-footer">
+        <button id="back-button" class="action-btn">Indietro</button>
+    </footer>
+
+    <script src="/main.js"></script>
+    <script type="module" src="/js/manage-page.js"></script>
+</body>
+</html>

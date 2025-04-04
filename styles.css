@@ -1,0 +1,338 @@
+/* Global styles */
+* {
+    box-sizing: border-box;
+    font-family: 'Arial', 'Helvetica Neue', Helvetica, sans-serif;
+
+}
+
+body {
+    background-color: #f8f9fa;
+    color: #333;
+    line-height: 1.6;
+    font-size: 16px;
+    padding: 20px;
+    margin: 0;
+    width: 100%;
+    padding-bottom: 50px; /* Add some bottom padding to ensure content isn't covered by the footer */
+}
+
+
+
+main {
+    margin: 20px 0;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    min-height: calc(100vh - 80px); /* Ensures main content area takes at least the full height minus the footer's height */
+}
+
+/* Media Queries for responsiveness */
+@media (max-width: 768px) {
+    body {
+        padding-bottom: 60px; /* Add extra space at the bottom for mobile to avoid footer overlap */
+    }
+
+    main {
+        min-height: calc(100vh - 120px); /* Ensure the content area is large enough to accommodate footer */
+    }
+}
+
+/* Mobile-specific footer adjustment */
+@media (max-width: 480px) {
+    body {
+        padding-bottom: 70px; /* Add more space at the bottom for very small screens */
+    }
+
+    main {
+        min-height: calc(100vh - 140px); /* Ensure the content area is large enough for very small screens */
+    }
+}
+
+/* Sticky footer styling */
+#sticky-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    text-align: center;
+    padding: 10px 0;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Adds shadow on top of the footer for separation */
+}
+
+h2, h3 {
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+/* --------------------------------------------- */
+/* --------------------------------------------- */
+/* Homepage styles */
+/* Home container to hold both stacked containers */
+
+/* Styles specific to the index.html page */
+.index-page {
+    background-image: url('/images/background.webp'); /* Background image */
+    background-size: cover; /* Ensures the image covers the entire screen */
+    background-position: center; /* Centers the image */
+    background-attachment: fixed; /* Keeps the image in place while scrolling */
+    height: 100vh; /* Set the height to the full viewport height */
+}
+
+.index-page body {
+    background-color: transparent; /* Reset the default background color */
+    margin: 0; /* Remove default body margin */
+}
+
+.home-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    flex-direction: column;  /* Stacks the containers vertically */
+    height: 100vh;  /* Full viewport height */
+    gap: 0;  /* No gap between the stacked containers */
+}
+
+/* --------------------------------------------- */
+/* First container (logo) takes 70% of the height */
+.logo-container {
+    height: 35%; 
+    display: flex;
+    justify-content: flex-end;  /* Aligns logo to the right */
+    align-items: center;  /* Vertically centers the logo */
+    width: 100%;
+}
+
+/* Responsive image for the logo */
+.logo-container img {
+    object-fit: contain;  /* Ensures image scales without distortion */
+    height: auto;
+}
+
+/* Logo styles */
+#home-logo {
+    height: 40%;
+    object-fit: contain;
+
+}
+
+/* --------------------------------------------- */
+.central-image-container {
+    height: 40%;
+    display: flex;
+    justify-content: center;  /* Centers the image horizontally */
+    align-items: center;  /* Centers the image vertically */
+    width: 100%;
+}
+
+#Logo-bell {
+    height: 100%;
+    box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.8); /* Adjust shadow settings as needed */
+}
+
+.spacer-container {
+    height: 10%;
+}
+
+/* --------------------------------------------- */
+/* Second container (buttons) takes 30% of the height */
+.actions-container {
+    height: 15%;  /* Takes 25% of the available height */
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;  /* Centers the items horizontally */
+    width: 100%;
+}
+
+#goButton {
+    font-weight: bold;
+    font-size: 18px; /* Slightly larger font size */
+}
+
+/* Disabled state for 'Go' button */
+#goButton:disabled {
+    background-color: #d6d6d6; /* Light grey background to show it's disabled */
+    border-color: #b3b3b3; /* Lighter border */
+    color: #5a5a5a; /* Lighter text color */
+    cursor: not-allowed; /* Change cursor to indicate it's not clickable */
+    box-shadow: none; /* Remove any box-shadow */
+    transform: none; /* Remove the transform effect */
+}
+
+/* --------------------------------------------- */
+/* --------------------------------------------- */
+/* Button styles */
+button {
+    display: inline-block;
+    background-color: #007bff;
+    padding: 12px 25px;
+    color: white;
+    text-decoration: none;
+    border: none;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    margin-bottom: 10px;
+    font-size: 16px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2), -4px -4px 10px rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+/* Hover effect */
+button:hover {
+    background-color: #0056b3; /* Darker shade of blue */
+    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.3), -4px -4px 12px rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+/* Active effect */
+button:active {
+    background-color: #004085; /* Even darker shade when active */
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.3), inset -2px -2px 5px rgba(255, 255, 255, 0.3);
+    transform: translateY(2px);
+}
+
+/* --------------------------------------------- */
+/* Links styling */
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* --------------------------------------------- */
+/* Other */
+
+/* Notification text in admin */
+#notification {
+    color: rgb(0, 0, 0);
+}
+
+/* wysiwyg-editor */
+.wysiwyg-editor-container {
+    width: 95%;
+    margin: 0 auto;
+}
+
+
+/* --------------------------------------------- */
+/* table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+th,
+td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+tr:hover {
+    background-color: #f9f9f9;
+}
+
+/* --------------------------------------------- */
+/* Items-page */
+/* Style for body when it has the class 'items-page' */
+body.items-page {
+    background-color: #121212;  /* Dark background to match the dark theme */
+    color: #e0e0e0;  /* Light text color for good contrast */
+    font-family: Arial, sans-serif;  /* Consistent font style */
+    margin: 0;
+    padding: 0;
+}
+
+/* Container for the items list */
+body.items-page #items-list-container {
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Ensure content is scrollable if needed */
+    background-color: #121212; /* Dark background for the container */
+    color: #e0e0e0; /* Light text color for better contrast */
+    padding: 10px;  /* Optional: Add padding for better spacing */
+    margin-bottom: 150px;
+}
+
+/* Footer with the 'Back' button */
+body.items-page #sticky-footer {
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #1f1f1f; /* Slightly lighter dark background */
+    color: #e0e0e0;  /* Text color matching the overall theme */
+    text-align: center;
+    padding: 15px;
+    z-index: 1000;
+    box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.5); /* Slight shadow for the footer */
+}
+
+
+/* Add styles for list items to maintain consistency */
+body.items-page .list-item {
+    display: flex;
+    align-items: center; /* Vertically center the circle and text */
+    margin-bottom: 4px;
+    padding: 6px 4px; /* Comfortable padding */
+    background-color: #1f1f1f; /* Slightly lighter background for the list item */
+    box-shadow: none; /* Removed shadow for a flat design */
+    text-overflow: ellipsis; /* Adds "..." if the text overflows */
+    cursor: pointer; /* Make it clear that the item is clickable */
+    border-radius: 8px; /* Rounded corners for a smoother look */
+    user-select: none; /* Prevent text selection */
+}
+
+/* Circle styling */
+body.items-page .circle {
+    width: 32px; /* Size of the circle */
+    height: 32px; /* Same size as width */
+    border-radius: 50%; /* Make it round */
+    margin-right: 15px; /* Space between circle and text */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #007bff; /* Default blue color for the circle */
+    transition: background-color 0.3s ease; /* Smooth transition on hover */
+}
+
+/* Container for the title and subtitle stacked vertically */
+body.items-page .text-container {
+    display: flex;
+    flex-direction: column; /* Stack the title and subtitle vertically */
+    align-items: flex-start; /* Align items to the left */
+}
+
+/* Styling for the item title */
+body.items-page .item-title {
+    font-weight: normal; /* No bold text */
+    font-size: 16px; /* Maintain a readable font size */
+    color: #e0e0e0; /* Light text color for title */
+    letter-spacing: 0.5px; /* Clean letter spacing */
+    display: block; /* Ensures it takes up its own line */
+    user-select: none; /* Prevent text selection */
+}
+
+/* Styling for the item subtitle */
+body.items-page .item-subtitle {
+    font-weight: normal; /* Regular weight for the subtitle */
+    font-size: 10px; /* Smaller font size than the title */
+    color: #b0b0b0; /* Lighter color for the subtitle */
+    margin-top: 5px; /* Adds space between the title and subtitle */
+    display: block; /* Ensures it appears on a new line directly under the title */
+    user-select: none; /* Prevent text selection */
+}

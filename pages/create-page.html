@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modulo pagina</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.2/tinymce.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+</head>
+
+<body>
+
+    <h2>Modulo pagina</h2>
+    <form id="googleForm">
+        <label>Password modulo pagina:</label>
+        <input type="password" id="creationFormId" name="password" required><br><br>
+
+        <label>ID (Auto-filled, Read-only):</label>
+        <input type="text" id="id" readonly required><br><br>
+
+        <label>Title:</label>
+        <input type="text" id="title" required><br><br>
+
+        <label>Subtitle:</label>
+        <input type="text" id="subtitle"><br><br>
+
+        <div class="wysiwyg-editor-container">
+            <label>Content:</label>
+            <textarea id="content"></textarea><br><br>
+        </div>
+
+        <label>Image URL:</label>
+        <input type="url" id="image"><br><br>
+
+        <label>Colour:</label>
+        <input type="color" id="colour" value="#ffffff"><br><br>
+
+        <label>External Link:</label>
+        <input type="url" id="externalLink"><br><br>
+
+        <label>Custom Page:</label>
+        <select id="customPage">
+            <option value="false">False</option>
+            <option value="true">True</option>
+        </select><br><br>
+
+        <label>Parent:</label>
+        <select id="parent">
+            <option value="">Select Parent</option>
+        </select><br><br>
+
+        <label hidden>Category:</label>
+        <select id="category" hidden>
+            <option value="category1" selected>Category 1</option>
+            <option value="category2">Category 2</option>
+            <option value="category3">Category 3</option>
+        </select><br><br>
+
+
+
+        <button type="submit">Invia</button>
+    </form>
+    <footer id="sticky-footer">
+        <button id="back-button">Indietro</button>
+    </footer>
+    <script src="/main.js"></script>
+    <script type="module" src="/js/create-page.js"></script>
+
+</body>
+
+</html>

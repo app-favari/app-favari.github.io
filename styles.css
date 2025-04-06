@@ -130,8 +130,7 @@ h2, h3 {
 }
 
 #Logo-bell {
-    height: 100%;
-    box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.8); /* Adjust shadow settings as needed */
+    height: 60%;
 }
 
 .spacer-container {

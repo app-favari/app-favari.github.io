@@ -101,7 +101,7 @@ h2, h3 {
 /* --------------------------------------------- */
 /* First container (logo) takes 20% of the height */
 .logo-container {
-    height: 20%; 
+    height: 30%; 
     display: flex;
     justify-content: flex-end;  /* Aligns logo to the right */
     align-items: center;  /* Vertically centers the logo */
@@ -135,7 +135,7 @@ h2, h3 {
 }
 
 .spacer-container {
-    height: 15%;
+    height: 5%;
 }
 
 /* --------------------------------------------- */

@@ -151,7 +151,10 @@ h2, h3 {
 
 #goButton {
     font-weight: bold;
-    font-size: 18px; /* Slightly larger font size */
+    font-size: 18px;
+    background-color: #F0C36D; /* Light Gold */
+    border-color: #BD4B26; /* Tuscany */
+    color: #333333; /* Dark Charcoal for text */
 }
 
 /* Disabled state for 'Go' button */

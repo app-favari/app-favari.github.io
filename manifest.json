@@ -1,6 +1,6 @@
 {
-  "name": "Favari",
-  "short_name": "Favari",
+  "name": "La Campana",
+  "short_name": "La Campana",
   "description": "App della Parrocchia dei Favari",
   "start_url": ".",
   "display": "standalone",

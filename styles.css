@@ -157,6 +157,12 @@ h2, h3 {
     color: #333333; /* Dark Charcoal for text */
 }
 
+#installButton {
+    background-color: #F0C36D; /* Light Gold */
+    border-color: #BD4B26; /* Tuscany */
+    color: #333333; /* Dark Charcoal for text */
+}
+
 /* Disabled state for 'Go' button */
 #goButton:disabled {
     background-color: #d6d6d6; /* Light grey background to show it's disabled */

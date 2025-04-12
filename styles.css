@@ -217,6 +217,32 @@ a:hover {
     text-decoration: underline;
 }
 
+
+
+/* -------------------------------------------- */
+/* Single-item */
+/* Ensure images fit within the content container */
+#content-container img {
+    max-width: 100%; /* Prevent images from exceeding the container width */
+    height: auto; /* Maintain aspect ratio */
+    display: block; /* Remove inline spacing issues */
+    margin: 0 auto; /* Center images horizontally */
+}
+
+/* Add padding and ensure content is responsive */
+#content-container {
+    padding: 15px; /* Add padding for better spacing */
+    word-wrap: break-word; /* Ensure long text doesn't overflow */
+    overflow-wrap: break-word; /* Support for modern browsers */
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+    #content-container {
+        padding: 10px; /* Reduce padding for smaller screens */
+    }
+}
+
 /* --------------------------------------------- */
 /* Other */
 

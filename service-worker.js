@@ -1,4 +1,4 @@
-const CACHE_NAME = 'favari-cache-v9';
+const CACHE_NAME = 'favari-cache-v10';
 const EXCLUDE_FROM_CACHE = [
     "https://docs.google.com/spreadsheets/d/1Avj1eAXQSSAIoMQrUOu7HuIkqwD8McU5v2VRWIO6nS0/export?format=csv",
     "https://docs.google.com/spreadsheets/d/1hPLssEGyjtFCH15axqjy9aALPUkttOPcsZUjK0n5VEU/export?format=csv"

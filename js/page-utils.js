@@ -183,3 +183,55 @@ export async function downloadValidPagesCSV() {
         console.error("Error downloading valid pages CSV:", error);
     }
 }
+
+
+/**
+ * Reorder pages based on the 'category' field.
+ * Pages with a valid 'category' value will be placed in the specified position.
+ * Pages without a 'category' value or with invalid values will retain their original order.
+ * @param {Array} pages - The list of pages to reorder.
+ * @returns {Array} - The reordered list of pages.
+ */
+export function reorderPagesByCategory(pages) {
+    const orderedPages = [];
+    const unorderedPages = [];
+
+    // Create a map to store pages with valid 'category' values
+    const categoryMap = new Map();
+
+    pages.forEach(page => {
+        const category = parseInt(page.category, 10);
+        if (!isNaN(category) && category > 0) {
+            // Handle duplicate categories by keeping the first occurrence
+            if (!categoryMap.has(category)) {
+                categoryMap.set(category, page);
+            } else {
+                console.warn(`Duplicate category value detected: ${category}. Keeping the first occurrence.`);
+            }
+        } else {
+            unorderedPages.push(page); // Pages without valid 'category' values
+        }
+    });
+
+    // Sort the categoryMap by category keys and add them to the orderedPages array
+    Array.from(categoryMap.keys())
+        .sort((a, b) => a - b)
+        .forEach(category => {
+            orderedPages[category - 1] = categoryMap.get(category); // Place in the correct position (0-based index)
+        });
+
+    // Fill in gaps with unordered pages while maintaining their original order
+    let unorderedIndex = 0;
+    for (let i = 0; i < orderedPages.length || unorderedIndex < unorderedPages.length; i++) {
+        if (!orderedPages[i]) {
+            orderedPages[i] = unorderedPages[unorderedIndex++];
+        }
+    }
+
+    // Append any remaining unordered pages
+    while (unorderedIndex < unorderedPages.length) {
+        orderedPages.push(unorderedPages[unorderedIndex++]);
+    }
+
+    return orderedPages;
+}

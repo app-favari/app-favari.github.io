@@ -1,4 +1,4 @@
-import { getValidPages } from './page-utils.js'; // Import utility function to fetch valid pages
+import { getValidPages, reorderPagesByCategory } from './page-utils.js'; // Import the reorder function
 
 document.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Filter pages based on the parentId or show rows with empty parent field
     const filteredPages = validPages.filter(page => {
         if (parentId) {
-            // If parentId is provided, show only rows where the 'parent' field matches the parentId
+                     // If parentId is provided, show only rows where the 'parent' field matches the parentId
             return page.parent === parentId;
         } else {
             // If no parentId is provided, show only rows where the 'parent' field is empty (i.e., top-level pages)
@@ -17,17 +17,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // Populate the list with filtered pages
+    // Reorder pages based on the 'category' field
+    const reorderedPages = reorderPagesByCategory(filteredPages);
+
+    // Populate the list with reordered pages
     const itemsListContainer = document.getElementById('items-list-container');
     itemsListContainer.innerHTML = ''; // Clear any existing content
 
-    filteredPages.forEach(page => {
+    reorderedPages.forEach(page => {
         const itemElement = createListItem(page, validPages); // Pass validPages here
         itemsListContainer.appendChild(itemElement);
     });
 });
 
-// Function to create the list item element
 // Function to create the list item element
 function createListItem(page, validPages) {
     const itemDiv = document.createElement('div');

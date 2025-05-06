@@ -48,7 +48,7 @@ export async function deletePage() {
 
     console.log('Selected Page ID:', selectedId);
 
-    const formUrl = `https://docs.google.com/forms/d/e/${formId}/formResponse`;
+    const formUrl = `https://docs.google.com/forms/d/e/${formId}mHm9Q[/formResponse`;
     const formData = new FormData();
     formData.append(config.deletionEntryId, selectedId);
 

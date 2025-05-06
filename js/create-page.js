@@ -34,7 +34,7 @@ function handleFormSubmission() {
             return;
         }
 
-        const formUrl = `https://docs.google.com/forms/d/e/${formIdInput}/formResponse`;
+        const formUrl = `https://docs.google.com/forms/d/e/${formIdInput}sNNeQ/formResponse`;
         const formData = new FormData();
 
         formData.append(config.idField, document.getElementById('id').value);

@@ -189,6 +189,7 @@ export async function downloadValidPagesCSV() {
  * Reorder pages based on the 'category' field.
  * Pages with a valid 'category' value will be placed in the specified position.
  * Pages without a 'category' value or with invalid values will retain their original order.
+ * Duplicate categories will be included in the order they appear.
  * @param {Array} pages - The list of pages to reorder.
  * @returns {Array} - The reordered list of pages.
  */
@@ -202,12 +203,11 @@ export function reorderPagesByCategory(pages) {
     pages.forEach(page => {
         const category = parseInt(page.category, 10);
         if (!isNaN(category) && category > 0) {
-            // Handle duplicate categories by keeping the first occurrence
+            // Store all pages with valid categories, including duplicates
             if (!categoryMap.has(category)) {
-                categoryMap.set(category, page);
-            } else {
-                console.warn(`Duplicate category value detected: ${category}. Keeping the first occurrence.`);
+                categoryMap.set(category, []);
             }
+            categoryMap.get(category).push(page); // Add the page to the category
         } else {
             unorderedPages.push(page); // Pages without valid 'category' values
         }
@@ -217,7 +217,8 @@ export function reorderPagesByCategory(pages) {
     Array.from(categoryMap.keys())
         .sort((a, b) => a - b)
         .forEach(category => {
-            orderedPages[category - 1] = categoryMap.get(category); // Place in the correct position (0-based index)
+            // Add all pages under the same category in order
+            orderedPages.push(...categoryMap.get(category));
         });
 
     // Fill in gaps with unordered pages while maintaining their original order

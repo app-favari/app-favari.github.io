@@ -236,3 +236,20 @@ export function reorderPagesByCategory(pages) {
 
     return orderedPages;
 }
+
+/**
+ * Generates a SHA-1 hash of the given string.
+ * 
+ * This function uses the SubtleCrypto API to compute a secure SHA-1 digest.
+ * It's useful for comparing user input (like form IDs or passwords) against
+ * pre-hashed values without exposing the original data.
+ * 
+ * @param {string} message - The input string to hash.
+ * @returns {Promise<string>} - A Promise that resolves to a SHA-1 hash in hexadecimal format.
+ */
+export async function sha1Hash(message) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(message);
+    const hashBuffer = await crypto.subtle.digest('SHA-1', data);
+    return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+}

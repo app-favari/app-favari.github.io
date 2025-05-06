@@ -1,5 +1,5 @@
 import config from './config.js';
-import { getValidPages } from './page-utils.js';
+import { getValidPages, sha1Hash } from './page-utils.js';
 
 async function fetchValidPages() {
     const validPages = await getValidPages(true);
@@ -17,8 +17,8 @@ async function fetchValidPages() {
 
     validPages.forEach(page => {
         const option = document.createElement('option');
-        option.value = page.id; // Store the page ID in the option's value
-        option.textContent = page.title || page.id; // Display the title or fall back to the ID if no title is available
+        option.value = page.id;
+        option.textContent = page.title || page.id;
         pagesDropdown.appendChild(option);
     });
 }
@@ -28,21 +28,27 @@ export async function deletePage() {
     console.log('Form ID:', formId);
 
     if (!formId) {
-        alert('Please enter a Google Form ID');
+        alert('Inserisci una password!');
+        return;
+    }
+
+    const formIdHash = await sha1Hash(formId);
+    if (formIdHash !== config.deletionFormIdHash) {
+        alert('Password sbagliata!');
         return;
     }
 
     const pagesDropdown = document.getElementById('pagesDropdown');
     const selectedId = pagesDropdown.value;
-    
+
     if (!selectedId) {
-        alert('Please select a page to delete');
+        alert('Seleziona una pagina!');
         return;
     }
 
     console.log('Selected Page ID:', selectedId);
 
-    const formUrl = `https://docs.google.com/forms/d/e/${formId}mHm9Q/formResponse`;
+    const formUrl = `https://docs.google.com/forms/d/e/${formId}/formResponse`;
     const formData = new FormData();
     formData.append(config.deletionEntryId, selectedId);
 
@@ -53,11 +59,11 @@ export async function deletePage() {
             mode: 'no-cors'
         });
 
-        alert(`Page with ID ${selectedId} deleted successfully!`);
-        fetchValidPages(); // Re-fetch pages to update the dropdown
+        alert(`Pagina con id ${selectedId} elininata!`);
+        fetchValidPages(); // Refresh dropdown
     } catch (error) {
-        console.error('Error submitting form:', error);
-        alert('Error deleting page: ' + error.message);
+        console.error('Errore:', error);
+        alert('Errore: ' + error.message);
     }
 }
 
@@ -66,7 +72,7 @@ function editPage() {
     const selectedId = pagesDropdown.value;
 
     if (!selectedId) {
-        alert('Please select a page to edit');
+        alert('Seleziona una pagina!');
         return;
     }
 

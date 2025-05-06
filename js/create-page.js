@@ -1,5 +1,5 @@
 import config from './config.js';  // Import configuration file
-import { getValidPages } from './page-utils.js';  // Import utility function to fetch valid pages
+import { getValidPages, sha1Hash } from './page-utils.js';
 
 // Initialize TinyMCE editor function
 function initTinyMCE() {
@@ -19,16 +19,22 @@ function generateId() {
 
 // Handle form submission
 function handleFormSubmission() {
-    document.getElementById('googleForm').addEventListener('submit', function (event) {
+    document.getElementById('googleForm').addEventListener('submit', async function (event) {
         event.preventDefault();
 
-        const formId = document.getElementById(config.creationFormId).value.trim();
-        if (!formId) {
+        const formIdInput = document.getElementById(config.creationFormId).value.trim();
+        if (!formIdInput) {
             alert("Please provide a valid Google Form ID.");
             return;
         }
 
-        const formUrl = `https://docs.google.com/forms/d/e/${formId}sNNeQ/formResponse`;
+        const formIdHash = await sha1Hash(formIdInput);
+        if (formIdHash !== config.creationFormIdHsh) {
+            alert("Password sbagliata!");
+            return;
+        }
+
+        const formUrl = `https://docs.google.com/forms/d/e/${formIdInput}/formResponse`;
         const formData = new FormData();
 
         formData.append(config.idField, document.getElementById('id').value);
@@ -44,13 +50,13 @@ function handleFormSubmission() {
 
         fetch(formUrl, { method: "POST", body: formData, mode: "no-cors" })
             .then(() => {
-                alert("Form submitted successfully!");
+                alert("Operazione compiuta!");
                 document.getElementById('googleForm').reset();
                 clearEditorContent();
                 document.getElementById('id').value = generateId();
             })
             .catch(error => {
-                alert("Error submitting form: " + error);
+                alert("Errore: " + error);
             });
     });
 }

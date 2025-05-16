@@ -3,12 +3,52 @@ import { getValidPages, sha1Hash } from './page-utils.js';
 
 // Initialize TinyMCE editor function
 function initTinyMCE() {
+    const MAX_LENGTH = 45000; // Maximum length for HTML content
     tinymce.init({
         selector: '#content',
         plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table help',
         toolbar: 'undo redo | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media table | code preview',
         height: 400,
-        branding: false
+        branding: false,
+        setup: function (editor) {
+            editor.on('beforeinput', function (e) {
+                const content = editor.getContent({format: 'html'});
+                if (content.length >= MAX_LENGTH && e.inputType !== 'deleteContentBackward') {
+                    e.preventDefault();
+                    editor.notificationManager.open({
+                        text: `Limite massimo di ${MAX_LENGTH} caratteri HTML raggiunto!`,
+                        type: 'warning',
+                        timeout: 2000
+                    });
+                }
+            });
+            // Handle paste event to limit the length of pasted content
+            editor.on('paste', function (e) {
+                const clipboardData = (e.clipboardData || window.clipboardData);
+                let pastedData = clipboardData ? clipboardData.getData('text/html') || clipboardData.getData('text/plain') : '';
+                const content = editor.getContent({format: 'html'});
+                // Calcola quanti caratteri restano disponibili
+                const remaining = MAX_LENGTH - content.length;
+                if (remaining <= 0) {
+                    e.preventDefault();
+                    editor.notificationManager.open({
+                        text: `Limite massimo di ${MAX_LENGTH} caratteri HTML raggiunto!`,
+                        type: 'warning',
+                        timeout: 2000
+                    });
+                } else if (pastedData && (content.length + pastedData.length > MAX_LENGTH)) {
+                    e.preventDefault();
+                    // Troncamento del testo incollato per rispettare il limite
+                    let truncated = pastedData.substring(0, remaining);
+                    editor.insertContent(truncated);
+                    editor.notificationManager.open({
+                        text: `Il testo incollato è stato troncato a ${MAX_LENGTH} caratteri HTML!`,
+                        type: 'warning',
+                        timeout: 2000
+                    });
+                }
+            });
+        }
     });
 }
 

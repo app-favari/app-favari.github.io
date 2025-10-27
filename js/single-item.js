@@ -53,8 +53,23 @@ function renderPage(page) {
         externalLinkButton.textContent = 'Link';
         // Set up the button's click event to open the link in a new tab
         externalLinkButton.addEventListener('click', () => {
-            window.open(page.external_link, '_blank'); // Open the link in a new tab
+            // If the link points to a PDF, open it inside the app viewer; otherwise open in a new tab
+            if (isPdfUrl(page.external_link)) {
+                window.location.href = `/pages/pdf-viewer.html?url=${encodeURIComponent(page.external_link)}`;
+            } else {
+                window.open(page.external_link, '_blank');
+            }
         });
         contentContainer.appendChild(externalLinkButton);
+    }
+}
+
+// Helper to detect PDF URLs (same logic used in items.js)
+function isPdfUrl(url) {
+    try {
+        const parsed = new URL(url, window.location.href);
+        return /\.pdf(\?.*)?$/i.test(parsed.pathname + (parsed.search || '')) || parsed.pathname.toLowerCase().endsWith('.pdf');
+    } catch (e) {
+        return /\.pdf(\?.*)?$/i.test(url);
     }
 }

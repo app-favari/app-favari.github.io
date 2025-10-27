@@ -87,33 +87,45 @@ function createListItem(page, validPages) {
             } else {
                 // If the 'custom_page' is not "TRUE", check if external_link is provided
                 if (page.external_link) {
-                    // Generate a timestamp to append to the URL
-                    const timestamp = new Date().getTime();
-                    
-                    // Append the timestamp as a query parameter to avoid caching
-                    const urlWithTimestamp = `${page.external_link}?timestamp=${timestamp}`;
-                    
-                    // Redirect to the URL with the timestamp
-                    window.location.href = urlWithTimestamp;
-                } else {
-                    // Otherwise, redirect to the 'single-item.html' page with 'id' as a URL parameter
-                    const currentDate = new Date(); // Get the current date
-                    const dayOfMonth = currentDate.getDate(); // Get the day of the month
-    
-                    // Redirect to 'single-item.html' with the 'id' and anchor (cal + day of the month)
-                    window.location.href = `single-item.html?id=${page.id}#cal${dayOfMonth}`;
-                }
-            }
-        }
-    });
-    
-    
-    return itemDiv;
-}
-
-
-
-// Function to check if the page has children (rows with this 'id' in the 'parent' field)
-function isParentForOtherRows(parentId, validPages) {
-    return validPages.some(page => page.parent === parentId);
-}
+                    // If the external link is a PDF, open it inside the app's PDF viewer
+                    if (isPdfUrl(page.external_link)) {
+                        window.location.href = `/pages/pdf-viewer.html?url=${encodeURIComponent(page.external_link)}`;
+                    } else {
+                        // Non-PDF external links: preserve existing behavior (avoid aggressive caching)
+                        const timestamp = new Date().getTime();
+                        const urlWithTimestamp = `${page.external_link}${page.external_link.includes('?') ? '&' : '?'}timestamp=${timestamp}`;
+                        window.location.href = urlWithTimestamp;
+                    }
+                 } else {
+                     // Otherwise, redirect to the 'single-item.html' page with 'id' as a URL parameter
+                     const currentDate = new Date(); // Get the current date
+                     const dayOfMonth = currentDate.getDate(); // Get the day of the month
+     
+                     // Redirect to 'single-item.html' with the 'id' and anchor (cal + day of the month)
+                     window.location.href = `single-item.html?id=${page.id}#cal${dayOfMonth}`;
+                 }
+             }
+         }
+     });
+     
+     
+     return itemDiv;
+ }
+ 
+ 
+ 
+ // Function to check if the page has children (rows with this 'id' in the 'parent' field)
+ function isParentForOtherRows(parentId, validPages) {
+     return validPages.some(page => page.parent === parentId);
+ }
+ 
+ // Helper to detect PDF URLs (handles query strings)
+ function isPdfUrl(url) {
+     try {
+         const parsed = new URL(url, window.location.href);
+         return /\.pdf(\?.*)?$/i.test(parsed.pathname + (parsed.search || '')) || parsed.pathname.toLowerCase().endsWith('.pdf');
+     } catch (e) {
+         // Fallback naive check
+         return /\.pdf(\?.*)?$/i.test(url);
+     }
+ }

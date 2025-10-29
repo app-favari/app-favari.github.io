@@ -4,6 +4,7 @@
   "description": "App della Parrocchia dei Favari",
   "start_url": ".",
   "display": "standalone",
+  "orientation": "any",
   "icons": [
     {
       "src": "./icons/android/android-launchericon-192-192.png",

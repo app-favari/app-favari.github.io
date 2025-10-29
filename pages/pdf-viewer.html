@@ -14,7 +14,6 @@
 </head>
 <body>
     <div id="controls">
-        <button id="back-button">Indietro</button>
         <span id="doc-info"></span>
     </div>
     <div class="pdf-container" id="pdfContainer"></div>
@@ -39,8 +38,8 @@
             loadAndRenderPdf(decodeURIComponent(pdfUrl));
         }
 
-        // Back buttons
-        document.querySelectorAll('#back-button, #back-button-footer').forEach(btn => {
+        // Back buttons - only footer button now
+        document.querySelectorAll('#back-button-footer').forEach(btn => {
             btn.addEventListener('click', () => history.back());
         });
 
@@ -54,25 +53,36 @@
                     const renderPromises = [];
                     for (let i = 1; i <= pdf.numPages; i++) {
                         renderPromises.push(pdf.getPage(i).then(page => {
-                            const scale = Math.min(1.5, (window.innerWidth / page.getViewport({ scale: 1 }).width) * 1.2);
-                            const viewport = page.getViewport({ scale });
+                            // Compute a logical scale to fit the container width
+                            const unscaledViewport = page.getViewport({ scale: 1 });
+                            const containerWidth = container.clientWidth || window.innerWidth;
+                            const baseScale = Math.min(1.8, (containerWidth / unscaledViewport.width)); // cap max scale
+                            const viewport = page.getViewport({ scale: baseScale });
+
+                            // Use devicePixelRatio to create a higher-resolution canvas for crisp text
+                            const outputScale = Math.max(1, Math.min(window.devicePixelRatio || 1, 2)); // cap to 2 for perf
                             const canvas = document.createElement('canvas');
                             const ctx = canvas.getContext('2d');
-                            canvas.height = viewport.height;
-                            canvas.width = viewport.width;
+
+                            // Set actual pixel size multiplied by outputScale, but keep CSS size at logical dimensions
+                            canvas.width = Math.floor(viewport.width * outputScale);
+                            canvas.height = Math.floor(viewport.height * outputScale);
+                            canvas.style.width = `${Math.floor(viewport.width)}px`;
+                            canvas.style.height = `${Math.floor(viewport.height)}px`;
+
+                            // Scale the context so drawing commands are scaled up to the higher pixel density
+                            ctx.setTransform(outputScale, 0, 0, outputScale, 0, 0);
+
                             container.appendChild(canvas);
-                            return page.render({ canvasContext: ctx, viewport: viewport }).promise.then(() => canvas);
+                            return page.render({ canvasContext: ctx, viewport }).promise.then(() => canvas);
                         }));
                     }
 
-                    // After all pages are rendered, optionally scroll to target page
+                    // After all pages are rendered, do NOT perform any automatic scrolling
                     Promise.all(renderPromises).then(canvases => {
-                        if (Number.isInteger(targetPageParam) && targetPageParam >= 1 && targetPageParam <= canvases.length) {
-                            canvases[targetPageParam - 1].scrollIntoView({ behavior: 'smooth', block: 'start' });
-                        } else {
-                            // small delay then scroll to top
-                            setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
-                        }
+                        // Rendering complete. Keep current scroll position (no automatic scrolling).
+                        // Optionally you can focus the viewer or update status:
+                        document.getElementById('doc-info').textContent = `Pagine: ${pdf.numPages} — Caricamento completato`;
                     });
                 }).catch(err => {
                     console.error('Errore nel caricamento del PDF', err);

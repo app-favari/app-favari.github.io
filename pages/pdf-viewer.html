@@ -50,39 +50,79 @@
                     const container = document.getElementById('pdfContainer');
                     document.getElementById('doc-info').textContent = `Pagine: ${pdf.numPages}`;
                     container.innerHTML = '';
+
+                    // Precompute day and regex:
+                    const day = new Date().getDate();
+                    const dayStr = String(day);
+                    const dayPadded = day < 10 ? '0' + day : dayStr;
+                    // weekday abbreviations (italian) — we ignore spaces/special chars by normalizing text
+                    const weekdayPattern = '(?:lun|mar|mer|gio|ven|sab|dom)';
+                    const combinedRegex = new RegExp(`(?:${dayStr}|${dayPadded})${weekdayPattern}`, 'i');
+
+                    let matchedPage = null;
                     const renderPromises = [];
                     for (let i = 1; i <= pdf.numPages; i++) {
-                        renderPromises.push(pdf.getPage(i).then(page => {
-                            // Compute a logical scale to fit the container width
+                        renderPromises.push(pdf.getPage(i).then(async page => {
+                            // --- analyze page text for the day+weekday pattern ---
+                            try {
+                                const textContent = await page.getTextContent();
+                                const rawText = textContent.items.map(it => it.str).join('');
+                                // Normalize: remove non-alphanumeric characters and lowercase
+                                const normalized = rawText.replace(/[^a-z0-9]/gi, '').toLowerCase();
+                                // If not yet matched, test the normalized text
+                                if (!matchedPage && combinedRegex.test(normalized)) {
+                                    matchedPage = i;
+                                    console.log('Trovata corrispondenza per il giorno alla pagina', i);
+                                }
+                            } catch (e) {
+                                // Non tutte le pagine possono fornire testo; ignoriamo errori di estrazione
+                                console.warn('Impossibile estrarre testo dalla pagina', i, e);
+                            }
+
+                            // --- render page to canvas (preserve existing rendering behavior) ---
                             const unscaledViewport = page.getViewport({ scale: 1 });
                             const containerWidth = container.clientWidth || window.innerWidth;
-                            const baseScale = Math.min(1.8, (containerWidth / unscaledViewport.width)); // cap max scale
+                            const baseScale = Math.min(1.8, (containerWidth / unscaledViewport.width));
                             const viewport = page.getViewport({ scale: baseScale });
 
-                            // Use devicePixelRatio to create a higher-resolution canvas for crisp text
-                            const outputScale = Math.max(1, Math.min(window.devicePixelRatio || 1, 2)); // cap to 2 for perf
+                            const outputScale = Math.max(1, Math.min(window.devicePixelRatio || 1, 2));
                             const canvas = document.createElement('canvas');
                             const ctx = canvas.getContext('2d');
 
-                            // Set actual pixel size multiplied by outputScale, but keep CSS size at logical dimensions
                             canvas.width = Math.floor(viewport.width * outputScale);
                             canvas.height = Math.floor(viewport.height * outputScale);
                             canvas.style.width = `${Math.floor(viewport.width)}px`;
                             canvas.style.height = `${Math.floor(viewport.height)}px`;
 
-                            // Scale the context so drawing commands are scaled up to the higher pixel density
                             ctx.setTransform(outputScale, 0, 0, outputScale, 0, 0);
 
                             container.appendChild(canvas);
-                            return page.render({ canvasContext: ctx, viewport }).promise.then(() => canvas);
+                            // Return an object linking canvas with page number
+                            return page.render({ canvasContext: ctx, viewport }).promise.then(() => ({ canvas, pageNumber: i }));
                         }));
                     }
 
-                    // After all pages are rendered, do NOT perform any automatic scrolling
-                    Promise.all(renderPromises).then(canvases => {
-                        // Rendering complete. Keep current scroll position (no automatic scrolling).
-                        // Optionally you can focus the viewer or update status:
+                    // After all pages are rendered, decide whether to scroll
+                    Promise.all(renderPromises).then(results => {
                         document.getElementById('doc-info').textContent = `Pagine: ${pdf.numPages} — Caricamento completato`;
+
+                        // Prefer explicit ?page= param; otherwise use matchedPage if found
+                        let pageToScroll = null;
+                        if (!isNaN(targetPageParam) && targetPageParam >= 1 && targetPageParam <= pdf.numPages) {
+                            pageToScroll = targetPageParam;
+                        } else if (matchedPage) {
+                            pageToScroll = matchedPage;
+                        }
+
+                        if (pageToScroll) {
+                            const target = results.find(r => r.pageNumber === pageToScroll);
+                            if (target && target.canvas) {
+                                // Scroll so the chosen page's canvas is at top of viewport
+                                target.canvas.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }
+                        }
+                    }).catch(err => {
+                        console.error('Errore durante il rendering delle pagine', err);
                     });
                 }).catch(err => {
                     console.error('Errore nel caricamento del PDF', err);

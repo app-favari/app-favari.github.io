@@ -96,14 +96,21 @@
 
                             ctx.setTransform(outputScale, 0, 0, outputScale, 0, 0);
 
-                            container.appendChild(canvas);
-                            // Return an object linking canvas with page number
+                            // Don't append canvas here - wait until all are rendered
                             return page.render({ canvasContext: ctx, viewport }).promise.then(() => ({ canvas, pageNumber: i }));
                         }));
                     }
 
-                    // After all pages are rendered, decide whether to scroll
+                    // After all pages are rendered, append them in correct order
                     Promise.all(renderPromises).then(results => {
+                        // Sort results by page number to ensure correct order
+                        results.sort((a, b) => a.pageNumber - b.pageNumber);
+                        
+                        // Now append canvases in the correct order
+                        results.forEach(result => {
+                            container.appendChild(result.canvas);
+                        });
+
                         document.getElementById('doc-info').textContent = `Pagine: ${pdf.numPages} — Caricamento completato`;
 
                         // Prefer explicit ?page= param; otherwise use matchedPage if found
